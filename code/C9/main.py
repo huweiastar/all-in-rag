@@ -17,6 +17,9 @@ logger = logging.getLogger(__name__)
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from dotenv import load_dotenv
+# 加载环境变量必须在导入config之前，因为config使用os.environ读取配置
+load_dotenv()
+
 from config import DEFAULT_CONFIG, GraphRAGConfig
 from rag_modules import (
     GraphDataPreparationModule,
@@ -27,8 +30,6 @@ from rag_modules.hybrid_retrieval import HybridRetrievalModule
 from rag_modules.graph_rag_retrieval import GraphRAGRetrieval
 from rag_modules.intelligent_query_router import IntelligentQueryRouter, QueryAnalysis
 
-# 加载环境变量
-load_dotenv()
 
 class AdvancedGraphRAGSystem:
     """

@@ -1,12 +1,39 @@
+# ==================== LangChain 核心框架 ====================
+# LangChain主库，提供Document、PromptTemplate、RunnablePassthrough等核心抽象
 langchain==0.3.26
+# HuggingFace集成，提供HuggingFaceEmbeddings用于加载BGE等开源嵌入模型
 langchain-huggingface==0.3.1
+# 文本分割器，提供MarkdownHeaderTextSplitter实现结构化分块
 langchain-text-splitters==0.3.8
+# Unstructured集成，用于解析多种文档格式（PDF、DOCX等）
 langchain-unstructured==0.1.6
+# Community集成，包含FAISS向量存储、BM25检索器、MoonshotChat等第三方贡献组件
 langchain-community==0.3.27
+
+# ==================== 向量存储与检索 ====================
+# Facebook开源的高效向量相似度搜索库，CPU版本（无需GPU）
+# FAISS (Facebook AI Similarity Search) 在百万级向量上仍能保持毫秒级查询速度
 faiss-cpu>=1.7.0
+
+# ==================== 文档解析 ====================
+# Unstructured库，用于从多种格式（MD、PDF、HTML等）中提取结构化内容
 unstructured==0.18.11
+
+# ==================== 嵌入模型与文本处理 ====================
+# Markdown格式解析支持
 Markdown==3.8.2
+# Sentence-Transformers框架，BGE等嵌入模型的底层依赖
+# 提供语义向量编码能力，将文本转换为高维向量表示
 sentence-transformers>=3.0.0
+# 延迟加载工具，减少不必要的模块导入
 lazy_loader==0.4
+
+# ==================== 检索算法 ====================
+# BM25算法实现（Okapi BM25），基于词频的经典信息检索算法
+# 用于混合检索中与向量检索互补，提升关键词匹配的召回率
 rank_bm25==0.2.2
+
+# ==================== LLM API ====================
+# OpenAI官方SDK，兼容Moonshot等OpenAI-API兼容服务
+# 版本锁定在1.x系列，避免2.0的大版本破坏性变更
 openai>=1.86.0,<2.0.0

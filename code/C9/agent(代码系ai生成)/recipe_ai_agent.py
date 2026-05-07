@@ -61,7 +61,9 @@ class RecipeInfo:
 class KimiRecipeAgent:
     """Kimi菜谱解析AI Agent"""
     
-    def __init__(self, api_key: str, base_url: str = "https://api.moonshot.cn/v1"):
+    def __init__(self, api_key: str, base_url: str = None):
+        if base_url is None:
+            base_url = os.getenv("DASHSCOPE_BASE_URL")
         self.api_key = api_key
         self.base_url = base_url
         self.client = OpenAI(
@@ -1305,8 +1307,8 @@ def main():
     parser.add_argument('-o', '--output', default='./ai_output', help='输出目录路径')
     parser.add_argument('--format', choices=['csv', 'neo4j'], default='neo4j', 
                        help='输出格式 (csv 或 neo4j)')
-    parser.add_argument('--base-url', default='https://api.moonshot.cn/v1', 
-                       help='Kimi API基础URL')
+    parser.add_argument('--base-url', default=os.getenv('DASHSCOPE_BASE_URL'),
+                       help='API基础URL')
     
     args = parser.parse_args()
     

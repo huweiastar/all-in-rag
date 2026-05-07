@@ -20,7 +20,7 @@ def load_config():
         return {
             "kimi": {
                 "api_key": "",
-                "base_url": "https://api.moonshot.cn/v1"
+                "base_url": os.getenv("DASHSCOPE_BASE_URL", "")
             },
             "output": {
                 "format": "neo4j",
@@ -135,7 +135,7 @@ def main():
     try:
         # 创建AI agent
         print("\n🤖 初始化AI Agent...")
-        ai_agent = KimiRecipeAgent(api_key, config["kimi"].get("base_url"))
+        ai_agent = KimiRecipeAgent(api_key, config["kimi"].get("base_url") or None)
         
         # 创建知识图谱构建器
         output_dir = config["output"].get("directory", "./ai_output")

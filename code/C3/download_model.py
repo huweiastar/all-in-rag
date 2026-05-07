@@ -9,7 +9,10 @@ def download_visualized_bge_model():
     # 定义模型路径和下载URL
     model_dir = Path("../../models/bge")
     model_file = model_dir / "Visualized_base_en_v1.5.pth"
-    download_url = "https://huggingface.co/BAAI/bge-visualized/resolve/main/Visualized_base_en_v1.5.pth?download=true"
+
+    # 国内优先使用 HuggingFace 镜像，速度快
+    download_url = "https://hf-mirror.com/BAAI/bge-visualized/resolve/main/Visualized_base_en_v1.5.pth?download=true"
+    # download_url = "https://huggingface.co/BAAI/bge-visualized/resolve/main/Visualized_base_en_v1.5.pth?download=true"  # 原版（慢）
     
     # 检查模型文件是否已存在
     if model_file.exists():
