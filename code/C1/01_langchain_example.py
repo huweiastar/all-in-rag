@@ -73,12 +73,21 @@ for chunk_size, chunk_overlap in param_groups:
     print(f"\n{'='*60}")
     print(f"参数: chunk_size={chunk_size}, chunk_overlap={chunk_overlap}")
     print(f"{'='*60}")
-
+    # 创建分割器
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,
         chunk_overlap=chunk_overlap
     )
+    # 开始切分
     chunks = text_splitter.split_documents(docs)
+    """
+    RecursiveCharacterTextSplitter 是 LangChain 里最常用、通用、语义友好的文本分割器，主打：递归 + 分层分隔符 + 尽量不破坏语义，是 RAG 系统的标配。
+    默认分隔符（从粗到细）：
+    ["\n\n", "\n", " ", ""]
+    1. 先按 双换行（段落）切 → 块太大？
+    2. 再按 单换行（句子）切 → 还大？
+    3. 再按 空格（单词）切 → 最后硬切字符
+    """
 
     # 统计信息
     sizes = [len(c.page_content) for c in chunks]
@@ -87,10 +96,23 @@ for chunk_size, chunk_overlap in param_groups:
     print(f"  最大块字符数: {max(sizes)}")
     print(f"  平均块字符数: {sum(sizes) // len(sizes)}")
 
-    vectorstore = InMemoryVectorStore.from_documents(chunks, embeddings)
+    # # 构建向量存储
+    # vectorstore = InMemoryVectorStore(embeddings)
+    # vectorstore.add_documents(chunks)
+    vectorstore = InMemoryVectorStore.from_documents(chunks, embeddings) # 把文本块变成向量，并存在内存向量库中。
+    """
+    InMemoryVectorStore.from_documents() = 生成向量 + 存入内存库
+    chunks：切好的文本块
+    embeddings：文字转向量的模型
+    """
 
     retrieved_docs = vectorstore.similarity_search(question, k=3)
     docs_content = "\n\n".join(doc.page_content for doc in retrieved_docs)
+    """
+    将检索到的多个文本块的页面内容 (doc.page_content) 合并成一个单一的字符串，并使用双换行符 ("\n\n") 分隔各个块，形成最终的上下文信息 (docs_content) 供大语言模型参考。
+    使用 "\n\n" (双换行符) 而不是 "\n" (单换行符) 来连接不同的检索文档块，主要是为了在传递给大型语言模型（LLM）时，能够更清晰地在语义上区分这些独立的文本片段。
+    双换行符通常代表段落的结束和新段落的开始，这种格式有助于LLM将每个块视为一个独立的上下文来源，从而更好地理解和利用这些信息来生成回答。
+    """
 
     answer = llm.invoke(prompt.format(question=question, context=docs_content))
     print(f"\n  回答:\n  {answer.content}")
