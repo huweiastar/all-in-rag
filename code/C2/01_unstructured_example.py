@@ -51,9 +51,7 @@ for strategy in strategies:
     )
 
     # 统计信息
-    print(f"  解析完成: {len(elements)} 个元素, {sum(len(str(e)) for e in elements)} 字符")
-    types = Counter(e.category for e in elements)
-    print(f"  元素类型: {dict(types)}")
+
 
     # 展示所有元素
     print(f"\n  所有元素:")

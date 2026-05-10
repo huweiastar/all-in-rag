@@ -1,17 +1,18 @@
 import os
 from typing import List, Dict, Any
-from langchain_deepseek import ChatDeepSeek
+from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 
 
 class SimpleSQLGenerator:
     """简化的SQL生成器"""
-    
-    def __init__(self, api_key: str = None):
-        self.llm = ChatDeepSeek(
-            model="deepseek-chat",
+
+    def __init__(self, api_key: str = None, base_url: str = None, model: str = None):
+        self.llm = ChatOpenAI(
+            model=model or os.getenv("MODEL", "qwen3.6-plus"),
             temperature=0,
-            api_key=api_key or os.getenv("DEEPSEEK_API_KEY")
+            openai_api_key=api_key or os.getenv("DASHSCOPE_API_KEY"),
+            openai_api_base=base_url or os.getenv("DASHSCOPE_BASE_URL")
         )
     
     def generate_sql(self, user_query: str, knowledge_results: List[Dict[str, Any]]) -> str:
