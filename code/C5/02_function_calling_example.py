@@ -1,16 +1,19 @@
 from openai import OpenAI
 import os
+from dotenv import load_dotenv
 
-# 初始化 OpenAI 客户端
+load_dotenv()
+
+# 初始化 OpenAI 客户端（使用阿里云百炼 qwen3.6-plus）
 client = OpenAI(
-    api_key=os.getenv("DEEPSEEK_API_KEY"),
-    base_url="https://api.deepseek.com",
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    base_url=os.getenv("DASHSCOPE_BASE_URL"),
 )
 
 # 定义一个函数，用于发送消息并获取模型的响应
 def send_messages(messages, tools=None):
     response = client.chat.completions.create(
-        model="deepseek-chat",
+        model=os.getenv("MODEL", "qwen3.6-plus"),
         messages=messages,
         tools=tools,
         tool_choice="auto",  # 让模型自主决定是否调用工具

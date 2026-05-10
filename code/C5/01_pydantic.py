@@ -1,14 +1,18 @@
 from typing import List
 import os
+from dotenv import load_dotenv
 from langchain_core.prompts import PromptTemplate
 from pydantic import BaseModel, Field
 from langchain_core.output_parsers import PydanticOutputParser
-from langchain_deepseek import ChatDeepSeek
+from langchain_openai import ChatOpenAI
 
-# 初始化 LLM
-llm = ChatDeepSeek(
-    model="deepseek-chat",
-    api_key=os.getenv("DEEPSEEK_API_KEY")
+load_dotenv()
+
+# 初始化 LLM（使用阿里云百炼 qwen3.6-plus）
+llm = ChatOpenAI(
+    model=os.getenv("MODEL", "qwen3.6-plus"),
+    openai_api_key=os.getenv("DASHSCOPE_API_KEY"),
+    openai_api_base=os.getenv("DASHSCOPE_BASE_URL"),
 )
 
 # 1. 定义数据结构

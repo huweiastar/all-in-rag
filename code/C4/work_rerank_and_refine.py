@@ -1,11 +1,14 @@
 import os
+from dotenv import load_dotenv
 from langchain_community.vectorstores import FAISS
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import LLMChainExtractor
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import TextLoader
-from langchain_deepseek import ChatDeepSeek
+from langchain_openai import ChatOpenAI
+
+load_dotenv()
 
 # 导入ColBERT重排器需要的模块
 from langchain.retrievers.document_compressors.base import BaseDocumentCompressor
@@ -134,10 +137,11 @@ hf_bge_embeddings = HuggingFaceBgeEmbeddings(
     model_name="BAAI/bge-large-zh-v1.5"
 )
 
-llm = ChatDeepSeek(
-    model="deepseek-chat", 
-    temperature=0.1, 
-    api_key=os.getenv("DEEPSEEK_API_KEY")
+llm = ChatOpenAI(
+    model=os.getenv("MODEL", "qwen3.6-plus"),
+    temperature=0.1,
+    openai_api_key=os.getenv("DASHSCOPE_API_KEY"),
+    openai_api_base=os.getenv("DASHSCOPE_BASE_URL"),
 )
 
 # 1. 加载和处理文档

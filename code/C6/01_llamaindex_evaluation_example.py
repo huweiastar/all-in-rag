@@ -1,8 +1,9 @@
 import os
 import asyncio
+from dotenv import load_dotenv
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 from llama_index.core.node_parser import SentenceWindowNodeParser, SentenceSplitter
-from llama_index.llms.deepseek import DeepSeek
+from llama_index.llms.openai_like import OpenAILike
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core.postprocessor import MetadataReplacementPostProcessor
 from llama_index.core.evaluation import (
@@ -13,7 +14,16 @@ from llama_index.core.evaluation import (
 from llama_index.core.evaluation.eval_utils import get_results_df
 from llama_index.core.evaluation import DatasetGenerator, QueryResponseDataset
 
-Settings.llm = DeepSeek(model="deepseek-chat", temperature=0.1, api_key=os.getenv("DEEPSEEK_API_KEY"))
+load_dotenv()
+
+# 配置模型（使用阿里云百炼 qwen3.6-plus）
+Settings.llm = OpenAILike(
+    model=os.getenv("MODEL", "qwen3.6-plus"),
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    api_base=os.getenv("DASHSCOPE_BASE_URL"),
+    is_chat_model=True,
+    temperature=0.1,
+)
 Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en")
 
 async def main():

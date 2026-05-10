@@ -6,14 +6,19 @@ from llama_index.core.schema import IndexNode
 from llama_index.experimental.query_engine import PandasQueryEngine
 from llama_index.core.retrievers import RecursiveRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
-from llama_index.llms.deepseek import DeepSeek
+from llama_index.llms.openai_like import OpenAILike
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from llama_index.core import Settings
 
 load_dotenv()
 
-# 配置模型
-Settings.llm = DeepSeek(model="deepseek-chat", api_key=os.getenv("DEEPSEEK_API_KEY"))
+# 配置模型（使用阿里云百炼 qwen3.6-plus）
+Settings.llm = OpenAILike(
+    model=os.getenv("MODEL", "qwen3.6-plus"),
+    api_key=os.getenv("DASHSCOPE_API_KEY"),
+    api_base=os.getenv("DASHSCOPE_BASE_URL"),
+    is_chat_model=True,
+)
 Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-zh-v1.5")
 
 # 1.加载数据并为每个工作表创建查询引擎和摘要节点
